@@ -2,19 +2,36 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class DailyOHLC {
     public static void main(String[] args) {
-        String apiKey = "d4bo8shr01qoua30olr0d4bo8shr01qoua30olrg";
+        String apiKey = "d4bo8shr01qoua30olr0d4bo8shr01qoua30olr0d4bo8shr01qoua30olrg";
         String symbol = "SPY";
         
-        // First, get current real-time data from Finnhub
-        getCurrentData(symbol, apiKey);
-        
-        // Then get historical OHLC data from Yahoo Finance
-        getHistoricalData(symbol);
+        // Continuous loop to update data every minute
+        while (true) {
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("          LIVE UPDATE - " + new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date()));
+            System.out.println("=".repeat(60) + "\n");
+            
+            // First, get current real-time data from Finnhub
+            getCurrentData(symbol, apiKey);
+            
+            // Then get historical OHLC data from Yahoo Finance
+            getHistoricalData(symbol);
+            
+            // Wait 60 seconds before next update
+            try {
+                System.out.println("\nWaiting 60 seconds for next update...");
+                Thread.sleep(60000); // 60 seconds = 60000 milliseconds
+            } catch (InterruptedException e) {
+                System.out.println("Update interrupted");
+                break;
+            }
+        }
     }
     
     // Method to get current real-time stock data
@@ -75,15 +92,15 @@ public class DailyOHLC {
     private static void getHistoricalData(String symbol) {
         
         try {
-            // Get last 7 days of data
+            // Get today's data with 1-minute intervals
             long now = System.currentTimeMillis() / 1000;
-            long sevenDaysAgo = now - (7 * 24 * 60 * 60);
+            long todayStart = now - (24 * 60 * 60); // Last 24 hours
             
             String urlString = String.format(
-                "https://query1.finance.yahoo.com/v8/finance/chart/%s?period1=%d&period2=%d&interval=1d",
-                symbol, sevenDaysAgo, now);
+                "https://query1.finance.yahoo.com/v8/finance/chart/%s?period1=%d&period2=%d&interval=1m",
+                symbol, todayStart, now);
             
-            System.out.println("=== HISTORICAL DATA (Yahoo Finance) ===\n");
+            System.out.println("=== TODAY'S 1-MINUTE DATA (Yahoo Finance) ===\n");
             
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -120,42 +137,60 @@ public class DailyOHLC {
                 JSONArray closes = quoteData.getJSONArray("close");
                 JSONArray volumes = quoteData.getJSONArray("volume");
                 
-                // Display data
-                System.out.println("=== Last 7 Days OHLC Data for " + symbol + " ===\n");
+                // Create ArrayLists for the chart
+                ArrayList<Double> priceList = new ArrayList<>();
+                ArrayList<String> timeList = new ArrayList<>();
+                
+                // Display 1-minute data for today
+                System.out.println("=== 1-Minute Data for " + symbol + " (Last 24 Hours) ===\n");
+                
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm");
                 
                 for (int i = 0; i < timestamps.length(); i++) {
                     long timestamp = timestamps.getLong(i);
                     java.util.Date date = new java.util.Date(timestamp * 1000L);
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
                     
-                    // Check for null values (market closed days)
-                    if (!opens.isNull(i)) {
-                        System.out.println("Date: " + sdf.format(date));
+                    // Check for null values (market closed hours)
+                    if (!closes.isNull(i)) {
+                        double closePrice = closes.getDouble(i);
+                        String timeLabel = sdf.format(date);
+                        
+                        // Add to chart data
+                        priceList.add(closePrice);
+                        timeList.add(timeLabel);
+                        
+                        System.out.println("Time: " + timeLabel);
                         System.out.println("  Open:   $" + String.format("%.2f", opens.getDouble(i)));
                         System.out.println("  High:   $" + String.format("%.2f", highs.getDouble(i)));
                         System.out.println("  Low:    $" + String.format("%.2f", lows.getDouble(i)));
-                        System.out.println("  Close:  $" + String.format("%.2f", closes.getDouble(i)));
+                        System.out.println("  Close:  $" + String.format("%.2f", closePrice));
                         System.out.println("  Volume: " + String.format("%,d", volumes.getLong(i)));
                         System.out.println();
                     }
                 }
                 
-                // Today's data (last entry)
+                // Latest data (last entry)
                 int lastIndex = timestamps.length() - 1;
-                System.out.println("=== TODAY'S DATA ===");
+                System.out.println("=== LATEST HOUR ===");
                 if (!opens.isNull(lastIndex)) {
-                    System.out.println("Open:   $" + String.format("%.2f", opens.getDouble(lastIndex)));
-                    System.out.println("High:   $" + String.format("%.2f", highs.getDouble(lastIndex)));
-                    System.out.println("Low:    $" + String.format("%.2f", lows.getDouble(lastIndex)));
-                    System.out.println("Close:  $" + String.format("%.2f", closes.getDouble(lastIndex)));
-                    System.out.println("Volume: " + String.format("%,d", volumes.getLong(lastIndex)));
+                    System.out.println("Open:   $" + opens.getDouble(lastIndex));
+                    System.out.println("High:   $" + highs.getDouble(lastIndex));
+                    System.out.println("Low:    $" + lows.getDouble(lastIndex));
+                    System.out.println("Close:  $" + closes.getDouble(lastIndex));
+                    System.out.println("Volume: " +volumes.getLong(lastIndex));
                 } else {
                     System.out.println("Market is closed or no data available for today yet.");
                 }
                 
+                // Display the graphical chart
+                System.out.println("\nOpening price chart window...");
+                StockChart.displayChart(priceList, timeList, symbol);
+                
             } else {
                 System.out.println("No data found");
             }
+
+
             
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -163,6 +198,6 @@ public class DailyOHLC {
         }
 
 
-        
+
     }
 }
