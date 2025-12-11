@@ -22,6 +22,27 @@ public class Breadth_First_Search {
         return checked; 
     }
 
+    // Recursion method to find the Path
+    public void findPath(ArrayList<Integer> current_pos, ArrayList<ArrayList<Integer>> checked, ArrayList<ArrayList<Integer>> path) {
+        if (current_pos.size() < 4) {
+            return; // Base case: not enough information to proceed
+        }
+        int last_row = current_pos.get(2);
+        int last_col = current_pos.get(3);
+
+        ArrayList<Integer> pathCell = new ArrayList<>();
+        pathCell.add(last_row);
+        pathCell.add(last_col);
+        path.add(pathCell);
+
+        for (ArrayList<Integer> cell : checked) {
+            if (cell.get(0) == last_row && cell.get(1) == last_col) {
+                findPath(cell, checked, path); // Recursive call
+                break;
+            }
+        }
+    }
+
     public void Solve (int x_start, int y_start, int x_finish, int y_finish, JPanel panel) {
         //Does not allow it to run the algorithm multiple times
         if (solved) return;
@@ -44,6 +65,7 @@ public class Breadth_First_Search {
         int iterations = 0;
         boolean exit_found = false;
         ArrayList<ArrayList<Integer>> curr_in_check_temp = new ArrayList<>();
+        ArrayList<Integer> end_pos = new ArrayList<>();
         //Main while loop to get t0 the end
         while (!exit_found/*cell_row != y_finish || cell_col != x_finish*/) {
             //Creating a new temp list to avoid concurrent modification error
@@ -76,6 +98,15 @@ public class Breadth_First_Search {
                 
                 // index 0 is checking row, index 1 is checking col, index 2 is checked row, index 3 is checked col
                 if (cell_row + 1 < maze.length && (maze[cell_row + 1][cell_col].equals(" ") || maze[cell_row + 1][cell_col].equals("F")) ) {
+                    if (cell_row + 1 == y_finish && cell_col == x_finish){
+                        exit_found = true;
+                        end_pos.add(cell_row+1);
+                        end_pos.add(cell_col);
+                        end_pos.add(cell_row);
+                        end_pos.add(cell_col);
+                        checked.add(end_pos);
+                        break;
+                    }
                     ArrayList<Integer> pos = new ArrayList<>();
                     pos.add(cell_row + 1);
                     pos.add(cell_col);
@@ -85,6 +116,15 @@ public class Breadth_First_Search {
                     System.out.println("Checking the row above");
                 }
                 if (cell_row - 1 >= 0 && (maze[cell_row - 1][cell_col].equals(" ") || maze[cell_row - 1][cell_col].equals("F")) ) {
+                    if (cell_row - 1 == y_finish && cell_col == x_finish){
+                        exit_found = true;
+                        end_pos.add(cell_row - 1);
+                        end_pos.add(cell_col);
+                        end_pos.add(cell_row);
+                        end_pos.add(cell_col);
+                        checked.add(end_pos);
+                        break;
+                    }
                     ArrayList<Integer> pos = new ArrayList<>();
                     pos.add(cell_row - 1);
                     pos.add(cell_col);
@@ -94,6 +134,15 @@ public class Breadth_First_Search {
                     System.out.println("Checking the row below");
                 }
                 if (cell_col < maze[0].length && (maze[cell_row][cell_col + 1].equals(" ") || maze[cell_row][cell_col + 1].equals("F")) ) {
+                    if (cell_row == y_finish && cell_col + 1 == x_finish){
+                        exit_found = true;
+                        end_pos.add(cell_row);
+                        end_pos.add(cell_col + 1);
+                        end_pos.add(cell_row);
+                        end_pos.add(cell_col);
+                        checked.add(end_pos);
+                        break;
+                    }
                     ArrayList<Integer> pos = new ArrayList<>();
                     pos.add(cell_row);
                     pos.add(cell_col + 1);
@@ -103,6 +152,15 @@ public class Breadth_First_Search {
                     System.out.println("Checking the column right");
                 }
                 if (cell_col - 1 >= 0 && (maze[cell_row][cell_col - 1].equals(" ") || maze[cell_row][cell_col - 1].equals("F")) ) {
+                    if (cell_row == y_finish && cell_col - 1 == x_finish){
+                        exit_found = true;
+                        end_pos.add(cell_row);
+                        end_pos.add(cell_col - 1);
+                        end_pos.add(cell_row);
+                        end_pos.add(cell_col);
+                        checked.add(end_pos);
+                        break;
+                    }
                     ArrayList<Integer> pos = new ArrayList<>();
                     pos.add(cell_row);
                     pos.add(cell_col - 1);
@@ -118,7 +176,7 @@ public class Breadth_First_Search {
                 // Repaint after each cell is processed
                 panel.repaint();
                 try {
-                    Thread.sleep(100); // 200ms delay to see animation
+                    Thread.sleep(0); // 50ms delay to see animation
                 } catch (InterruptedException e) {}
                 
                 System.out.println("Current in check:" + curr_in_check.size());
@@ -132,5 +190,13 @@ public class Breadth_First_Search {
             iterations ++;
             //break;
         }
+        System.out.println("The final position is" + end_pos);
+        System.out.println("The final pos from the checked list is" + checked.get(checked.size()-1));
+
+        //Figuring out the path
+        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
+        findPath(end_pos, checked, path);
+
+        System.out.println("Path found:" + path);
     }
 }
