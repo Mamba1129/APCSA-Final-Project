@@ -95,6 +95,8 @@ public class Maze {
             int x = 0;
             int y_start = 0;
             int x_start = 0;
+            int y_final = 0;
+            int x_final = 0;
             for (String[] row : maze) {
                 for (String cell : row) {
                     if (cell.equals("#")) {
@@ -105,6 +107,8 @@ public class Maze {
                         y_start = y;
                     } else if (cell.equals("F")) {
                         g.setColor(Color.RED);
+                        x_final = x;
+                        y_final = y;
                     } else {
                         g.setColor(Color.WHITE);
                     }
@@ -114,6 +118,7 @@ public class Maze {
                 x = 0;
                 y++;
             }   
+            // Draw the cursor image at the start position
             g.drawImage(image, x_start * cellSize, y_start * cellSize, cellSize, cellSize, this);
 
             for (ArrayList<Integer> pos : bfs.get_Curr_in_check()) {
@@ -127,6 +132,32 @@ public class Maze {
                 int col = pos.get(1);
                 g.setColor(Color.GRAY);
                 g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+            }
+
+            g.setColor(Color.RED);
+            g.fillRect(x_final * cellSize, y_final * cellSize, cellSize, cellSize );
+            
+            // Draw red line through the path
+            ArrayList<ArrayList<Integer>> path = bfs.get_Path();
+            if (path.size() > 1) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setColor(Color.RED);
+                g2d.setStroke(new BasicStroke(3)); // 3 pixel wide line
+                
+                for (int i = 0; i < path.size() - 1; i++) {
+                    int row1 = path.get(i).get(0);
+                    int col1 = path.get(i).get(1);
+                    int row2 = path.get(i + 1).get(0);
+                    int col2 = path.get(i + 1).get(1);
+                    
+                    // Draw line from center of cell1 to center of cell2
+                    int x1 = col1 * cellSize + cellSize / 2;
+                    int y1 = row1 * cellSize + cellSize / 2;
+                    int x2 = col2 * cellSize + cellSize / 2;
+                    int y2 = row2 * cellSize + cellSize / 2;
+                    
+                    g2d.drawLine(x1, y1, x2, y2);
+                }
             }
             
         }

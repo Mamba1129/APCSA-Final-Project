@@ -9,6 +9,7 @@ public class Breadth_First_Search {
     private boolean solved = false;
     public ArrayList<ArrayList<Integer>> curr_in_check = new ArrayList<>();
     public ArrayList<ArrayList<Integer>> checked = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> path = new ArrayList<>();
 
     public Breadth_First_Search(String[][] maze) {
         // Constructor
@@ -21,22 +22,28 @@ public class Breadth_First_Search {
     public ArrayList<ArrayList<Integer>> get_Checked() {
         return checked; 
     }
-
+    //Return the path finding algorithm
+    public ArrayList<ArrayList<Integer>> get_Path() {
+        return path;
+    }
     // Recursion method to find the Path
     public void findPath(ArrayList<Integer> current_pos, ArrayList<ArrayList<Integer>> checked, ArrayList<ArrayList<Integer>> path) {
+        // Add current position to path first
+        ArrayList<Integer> currentCell = new ArrayList<>();
+        currentCell.add(current_pos.get(0));
+        currentCell.add(current_pos.get(1));
+        path.add(0, currentCell); // Add to beginning for correct order
+        
         if (current_pos.size() < 4) {
-            return; // Base case: not enough information to proceed
+            return; // Base case: reached start (no parent info)
         }
-        int last_row = current_pos.get(2);
-        int last_col = current_pos.get(3);
+        
+        int parent_row = current_pos.get(2);
+        int parent_col = current_pos.get(3);
 
-        ArrayList<Integer> pathCell = new ArrayList<>();
-        pathCell.add(last_row);
-        pathCell.add(last_col);
-        path.add(pathCell);
-
+        // Find parent and recurse
         for (ArrayList<Integer> cell : checked) {
-            if (cell.get(0) == last_row && cell.get(1) == last_col) {
+            if (cell.get(0) == parent_row && cell.get(1) == parent_col) {
                 findPath(cell, checked, path); // Recursive call
                 break;
             }
@@ -176,7 +183,7 @@ public class Breadth_First_Search {
                 // Repaint after each cell is processed
                 panel.repaint();
                 try {
-                    Thread.sleep(0); // 50ms delay to see animation
+                    Thread.sleep(50); // 50ms delay to see animation
                 } catch (InterruptedException e) {}
                 
                 System.out.println("Current in check:" + curr_in_check.size());
@@ -194,9 +201,14 @@ public class Breadth_First_Search {
         System.out.println("The final pos from the checked list is" + checked.get(checked.size()-1));
 
         //Figuring out the path
-        ArrayList<ArrayList<Integer>> path = new ArrayList<>();
         findPath(end_pos, checked, path);
 
-        System.out.println("Path found:" + path);
+        System.out.println("Path found with " + path.size() + " cells:");
+        for (ArrayList<Integer> cell : path) {
+            System.out.println("  [" + cell.get(0) + ", " + cell.get(1) + "]");
+        }
+        
+        // Final repaint to show the path
+        panel.repaint();
     }
 }
