@@ -128,10 +128,12 @@ public class Maze {
                 g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
             }
             for (ArrayList<Integer> pos : bfs.get_Checked()) {
-                int row = pos.get(0);
-                int col = pos.get(1);
-                g.setColor(Color.GRAY);
-                g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                if (pos.get(0) != y_start || pos.get(1) != x_start) {
+                    int row = pos.get(0);
+                    int col = pos.get(1);
+                    g.setColor(Color.GRAY);
+                    g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                }
             }
 
             g.setColor(Color.RED);
