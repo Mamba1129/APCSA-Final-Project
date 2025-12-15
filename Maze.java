@@ -58,8 +58,8 @@ public class Maze {
         y_finish = tempYFinish;   
 
         //The call of the path finding algothirm
-        Breadth_First_Search bfs = new Breadth_First_Search(maze);
-        
+        //Breadth_First_Search bfs = new Breadth_First_Search(maze);
+        Greedy_First_Search bfs = new Greedy_First_Search(maze);
 
     class MyCanvas extends JPanel {
 
@@ -120,7 +120,7 @@ public class Maze {
             }   
             // Draw the cursor image at the start position
             g.drawImage(image, x_start * cellSize, y_start * cellSize, cellSize, cellSize, this);
-
+            System.out.println("Drawing " + bfs.get_Curr_in_check().size() + " cyan cells");
             for (ArrayList<Integer> pos : bfs.get_Curr_in_check()) {
                 int row = pos.get(0);
                 int col = pos.get(1);

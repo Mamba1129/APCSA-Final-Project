@@ -1,12 +1,12 @@
 
-import java.awt.*;
+
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class Breadth_First_Search {
     // Implementation of BFS algorithm for maze solving\
-    private String[][] maze;
-    private boolean solved = false;
+    public String[][] maze;
+    //private boolean solved = false;
     public ArrayList<ArrayList<Integer>> curr_in_check = new ArrayList<>();
     public ArrayList<ArrayList<Integer>> checked = new ArrayList<>();
     public ArrayList<ArrayList<Integer>> path = new ArrayList<>();
@@ -51,10 +51,7 @@ public class Breadth_First_Search {
     }
 
     public void Solve (int x_start, int y_start, int x_finish, int y_finish, JPanel panel) {
-        //Does not allow it to run the algorithm multiple times
-        if (solved) return;
-        solved = true;
-        
+
         //Starting cell
         int cell_row = x_start;
         int cell_col = y_start;
