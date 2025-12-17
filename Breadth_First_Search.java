@@ -111,13 +111,32 @@ public class Breadth_First_Search {
                         checked.add(end_pos);
                         break;
                     }
-                    ArrayList<Integer> pos = new ArrayList<>();
-                    pos.add(cell_row + 1);
-                    pos.add(cell_col);
-                    pos.add(cell_row);
-                    pos.add(cell_col);
-                    curr_in_check.add(pos);
-                    System.out.println("Checking the row above");
+                    
+                    // Check if already in checked list
+                    boolean already_checked = false;
+                    for (ArrayList<Integer> checked_cell : checked) {
+                        if (checked_cell.get(0) == cell_row + 1 && checked_cell.get(1) == cell_col) {
+                            already_checked = true;
+                            break;
+                        }
+                    }
+                    // Check if already in curr_in_check
+                    for (ArrayList<Integer> curr_cell : curr_in_check) {
+                        if (curr_cell.get(0) == cell_row + 1 && curr_cell.get(1) == cell_col) {
+                            already_checked = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!already_checked) {
+                        ArrayList<Integer> pos = new ArrayList<>();
+                        pos.add(cell_row + 1);
+                        pos.add(cell_col);
+                        pos.add(cell_row);
+                        pos.add(cell_col);
+                        curr_in_check.add(pos);
+                        System.out.println("Checking the row above");
+                    }
                 }
                 if (cell_row - 1 >= 0 && (maze[cell_row - 1][cell_col].equals(" ") || maze[cell_row - 1][cell_col].equals("F")) ) {
                     if (cell_row - 1 == y_finish && cell_col == x_finish){
@@ -129,13 +148,32 @@ public class Breadth_First_Search {
                         checked.add(end_pos);
                         break;
                     }
-                    ArrayList<Integer> pos = new ArrayList<>();
-                    pos.add(cell_row - 1);
-                    pos.add(cell_col);
-                    pos.add(cell_row);
-                    pos.add(cell_col);
-                    curr_in_check.add(pos);
-                    System.out.println("Checking the row below");
+                    
+                    // Check if already in checked list
+                    boolean already_checked = false;
+                    for (ArrayList<Integer> checked_cell : checked) {
+                        if (checked_cell.get(0) == cell_row - 1 && checked_cell.get(1) == cell_col) {
+                            already_checked = true;
+                            break;
+                        }
+                    }
+                    // Check if already in curr_in_check
+                    for (ArrayList<Integer> curr_cell : curr_in_check) {
+                        if (curr_cell.get(0) == cell_row - 1 && curr_cell.get(1) == cell_col) {
+                            already_checked = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!already_checked) {
+                        ArrayList<Integer> pos = new ArrayList<>();
+                        pos.add(cell_row - 1);
+                        pos.add(cell_col);
+                        pos.add(cell_row);
+                        pos.add(cell_col);
+                        curr_in_check.add(pos);
+                        System.out.println("Checking the row below");
+                    }
                 }
                 if (cell_col < maze[0].length && (maze[cell_row][cell_col + 1].equals(" ") || maze[cell_row][cell_col + 1].equals("F")) ) {
                     if (cell_row == y_finish && cell_col + 1 == x_finish){
@@ -147,13 +185,32 @@ public class Breadth_First_Search {
                         checked.add(end_pos);
                         break;
                     }
-                    ArrayList<Integer> pos = new ArrayList<>();
-                    pos.add(cell_row);
-                    pos.add(cell_col + 1);
-                    pos.add(cell_row);
-                    pos.add(cell_col);
-                    curr_in_check.add(pos);
-                    System.out.println("Checking the column right");
+                    
+                    // Check if already in checked list
+                    boolean already_checked = false;
+                    for (ArrayList<Integer> checked_cell : checked) {
+                        if (checked_cell.get(0) == cell_row && checked_cell.get(1) == cell_col + 1) {
+                            already_checked = true;
+                            break;
+                        }
+                    }
+                    // Check if already in curr_in_check
+                    for (ArrayList<Integer> curr_cell : curr_in_check) {
+                        if (curr_cell.get(0) == cell_row && curr_cell.get(1) == cell_col + 1) {
+                            already_checked = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!already_checked) {
+                        ArrayList<Integer> pos = new ArrayList<>();
+                        pos.add(cell_row);
+                        pos.add(cell_col + 1);
+                        pos.add(cell_row);
+                        pos.add(cell_col);
+                        curr_in_check.add(pos);
+                        System.out.println("Checking the column right");
+                    }
                 }
                 if (cell_col - 1 >= 0 && (maze[cell_row][cell_col - 1].equals(" ") || maze[cell_row][cell_col - 1].equals("F")) ) {
                     if (cell_row == y_finish && cell_col - 1 == x_finish){
@@ -165,13 +222,32 @@ public class Breadth_First_Search {
                         checked.add(end_pos);
                         break;
                     }
-                    ArrayList<Integer> pos = new ArrayList<>();
-                    pos.add(cell_row);
-                    pos.add(cell_col - 1);
-                    pos.add(cell_row);
-                    pos.add(cell_col);
-                    curr_in_check.add(pos);
-                    System.out.println("Checking the column Left");
+                    
+                    // Check if already in checked list
+                    boolean already_checked = false;
+                    for (ArrayList<Integer> checked_cell : checked) {
+                        if (checked_cell.get(0) == cell_row && checked_cell.get(1) == cell_col - 1) {
+                            already_checked = true;
+                            break;
+                        }
+                    }
+                    // Check if already in curr_in_check
+                    for (ArrayList<Integer> curr_cell : curr_in_check) {
+                        if (curr_cell.get(0) == cell_row && curr_cell.get(1) == cell_col - 1) {
+                            already_checked = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!already_checked) {
+                        ArrayList<Integer> pos = new ArrayList<>();
+                        pos.add(cell_row);
+                        pos.add(cell_col - 1);
+                        pos.add(cell_row);
+                        pos.add(cell_col);
+                        curr_in_check.add(pos);
+                        System.out.println("Checking the column Left");
+                    }
                 }
 
                 //Checking that it is not the starting cell
@@ -180,7 +256,7 @@ public class Breadth_First_Search {
                 // Repaint after each cell is processed
                 panel.repaint();
                 try {
-                    Thread.sleep(50); // 50ms delay to see animation
+                    Thread.sleep(100); // 100ms delay to see animation
                 } catch (InterruptedException e) {}
                 
                 System.out.println("Current in check:" + curr_in_check.size());

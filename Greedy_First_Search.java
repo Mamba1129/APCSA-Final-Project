@@ -3,24 +3,10 @@ import java.util.ArrayList;
 public class Greedy_First_Search extends Breadth_First_Search {
 
     private boolean solved = false;
-    // public ArrayList<ArrayList<Integer>> curr_in_check = new ArrayList<>();
-    // public ArrayList<ArrayList<Integer>> checked = new ArrayList<>();
-    // public ArrayList<ArrayList<Integer>> path = new ArrayList<>();
 
     public Greedy_First_Search(String[][] maze) {
         super(maze);
     }
-    // // A getter method for curr_in_check
-    // public ArrayList<ArrayList<Integer>> get_Curr_in_check() {
-    //     return curr_in_check; 
-    // }
-    // public ArrayList<ArrayList<Integer>> get_Checked() {
-    //     return checked; 
-    // }
-    // //Return the path finding algorithm
-    // public ArrayList<ArrayList<Integer>> get_Path() {
-    //     return path;
-    // }
 
     // A method to determine the distance from current position to finish
     public int detirmine_the_distance(ArrayList<Integer> current_pos, int x_finish, int y_finish) {
@@ -163,7 +149,7 @@ public class Greedy_First_Search extends Breadth_First_Search {
             }
 
             try {
-                Thread.sleep(500); // 50ms delay to see animation
+                Thread.sleep(100); // 100ms delay to see animation
             } catch (InterruptedException e) {}
 
             panel.repaint();
